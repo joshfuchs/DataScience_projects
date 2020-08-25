@@ -37,7 +37,28 @@ for x in range(0,len(patient_data['date_of_birth'])):
     patient_data['date_of_birth'][x] = patient_data['date_of_birth'][x][5:7] + '/' + \
         patient_data['date_of_birth'][x][8:10] + '/' + patient_data['date_of_birth'][x][0:4]
 
-#Split the address column into address_street, address_city, address_state, address_zip
+#Split the address column into strret, city, state, and zip
+#print(patient_data['address'])
+address_street = []
+address_city = []
+address_state = []
+address_zip = []
+for x in range(0,len(patient_data['address'])):
+    address_zip.append(patient_data['address'][x][-5:])
+    address_state.append(patient_data['address'][x][-8:-6])
+    street_break = patient_data['address'][x].find('\n')
+    city_break = patient_data['address'][x].find(',')
+    address_street.append(patient_data['address'][x][0:street_break])
+    address_city.append(patient_data['address'][x][street_break+1:city_break])
+    
+#Add to dataframe and delete old address column
+patient_data['address_street'] = address_street
+patient_data['address_city'] = address_city
+patient_data['address_state'] = address_state
+patient_data['address_zip'] = address_zip
+
+patient_data = patient_data.drop(columns='address')
+
 
 #Save to CSV
 #patient_data.to_csv('updated_patient_data.csv',index=False)
