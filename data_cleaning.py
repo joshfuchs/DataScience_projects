@@ -59,6 +59,45 @@ patient_data['address_zip'] = address_zip
 
 patient_data = patient_data.drop(columns='address')
 
+#Reformat the phone numbers to be only 10 digits (area code + number)
+print(patient_data['phone_number'][2000:2020])
+reformatted_phone = []
+for x in range(0,len(patient_data['phone_number'])):
+    
+    #First, let's deal with extensions, which all start with 'x'
+    extension_break = patient_data['phone_number'][x].find('x')
+    if extension_break == -1:
+        last = 0
+        #reformatted_phone.append(patient_data['phone_number'][x])
+    else:
+        last = extension_break
+        #reformatted_phone.append(patient_data['phone_number'][x][0:extension_break])
+    
+    #Now we can deal with the beginning of the phone number
+    
+    if patient_data['phone_number'][x][0] == '+':
+        first = 3
+        #reformatted_phone.append(patient_data['phone_number'][x][3:])
+    elif patient_data['phone_number'][x][0] == '0':
+        first = 4
+        #reformatted_phone.append(patient_data['phone_number'][x][4:])
+    elif patient_data['phone_number'][x][0] == '(':
+        #no_parentheses = patient_data['phone_number'][x].replace(')','-')
+        #reformatted_phone.append(no_parentheses[1:])
+        first = 1
+    else:
+        first = 0
+        #reformatted_phone.append(patient_data['phone_number'][x])
+
+    reformatted_phone.append(patient_data['phone_number'][first:last])
+
+
+
+print(reformatted_phone[2000:2020])
+#extension_break = patient_data['phone_number'][2019].find('x')
+#print(extension_break)
+
+
 
 #Save to CSV
 #patient_data.to_csv('updated_patient_data.csv',index=False)
