@@ -60,42 +60,34 @@ patient_data['address_zip'] = address_zip
 patient_data = patient_data.drop(columns='address')
 
 #Reformat the phone numbers to be only 10 digits (area code + number)
-print(patient_data['phone_number'][2000:2020])
+print(patient_data['phone_number'][2000:2030])
 reformatted_phone = []
 for x in range(0,len(patient_data['phone_number'])):
-    
     #First, let's deal with extensions, which all start with 'x'
     extension_break = patient_data['phone_number'][x].find('x')
     if extension_break == -1:
-        last = 0
-        #reformatted_phone.append(patient_data['phone_number'][x])
+        last = None
     else:
         last = extension_break
-        #reformatted_phone.append(patient_data['phone_number'][x][0:extension_break])
     
     #Now we can deal with the beginning of the phone number
-    
     if patient_data['phone_number'][x][0] == '+':
         first = 3
-        #reformatted_phone.append(patient_data['phone_number'][x][3:])
     elif patient_data['phone_number'][x][0] == '0':
         first = 4
-        #reformatted_phone.append(patient_data['phone_number'][x][4:])
     elif patient_data['phone_number'][x][0] == '(':
-        #no_parentheses = patient_data['phone_number'][x].replace(')','-')
-        #reformatted_phone.append(no_parentheses[1:])
         first = 1
     else:
         first = 0
-        #reformatted_phone.append(patient_data['phone_number'][x])
 
-    reformatted_phone.append(patient_data['phone_number'][first:last])
+    #Do the actual reformatting here
+    reformatted_phone.append(patient_data['phone_number'][x][first:last])
+    
+    #These next two are to ensure formatting is the same
+    reformatted_phone[x] = reformatted_phone[x].replace(')','-')
+    reformatted_phone[x] = reformatted_phone[x].replace('.','-')
 
-
-
-print(reformatted_phone[2000:2020])
-#extension_break = patient_data['phone_number'][2019].find('x')
-#print(extension_break)
+patient_data['phone_number'] = reformatted_phone
 
 
 
